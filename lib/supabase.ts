@@ -1,12 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Product, Budget, Ecosystem, UseCase } from "./products";
+import type { Product, Budget, Ecosystem, UseCase } from "./types";
 
 export const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// Maps a Supabase row (snake_case) to the app's Product type (camelCase)
 export function mapRowToProduct(row: Record<string, unknown>): Product {
   return {
     id: row.id as string,
@@ -24,5 +23,6 @@ export function mapRowToProduct(row: Record<string, unknown>): Product {
     comfort: row.comfort as number,
     note: row.note as string,
     why: row.why as string,
+    category: row.category as string,
   };
 }
