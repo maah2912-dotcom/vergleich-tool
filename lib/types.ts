@@ -20,6 +20,7 @@ export interface Product {
   note: string;
   why: string;
   category: string;
+  affiliate_url: string | null;
 }
 
 export interface Category {

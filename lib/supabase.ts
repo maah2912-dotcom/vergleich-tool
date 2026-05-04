@@ -24,5 +24,6 @@ export function mapRowToProduct(row: Record<string, unknown>): Product {
     note: row.note as string,
     why: row.why as string,
     category: row.category as string,
+    affiliate_url: (row.affiliate_url as string | null) ?? null,
   };
 }

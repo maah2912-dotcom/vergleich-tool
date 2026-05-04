@@ -77,6 +77,21 @@ const rankMeta = [
   },
 ];
 
+// ─── Affiliate button ──────────────────────────────────────────────────────────
+
+function AffiliateButton({ url }: { url: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors"
+    >
+      Preis auf Amazon prüfen →
+    </a>
+  );
+}
+
 // ─── Shared components ─────────────────────────────────────────────────────────
 
 function ScoreBar({
@@ -152,10 +167,7 @@ function ResultCard({
           <div className="text-sm text-slate-400 mt-0.5">{product.brand}</div>
         </div>
         <div className="text-right shrink-0">
-          <div className="text-2xl font-bold text-slate-900 tracking-tight">€{product.price}</div>
-          <div className="mt-1">
-            <Badge product={product} />
-          </div>
+          <Badge product={product} />
         </div>
       </div>
       <div className="rounded-xl bg-white/70 border border-slate-100 px-3.5 py-2.5 mb-4">
@@ -164,6 +176,11 @@ function ResultCard({
         </div>
         <p className="text-sm text-slate-700 leading-relaxed">{product.note}</p>
       </div>
+      {product.affiliate_url && (
+        <div className="mb-4">
+          <AffiliateButton url={product.affiliate_url} />
+        </div>
+      )}
       <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
         {(["sound", "anc", "battery"] as ScoreKey[]).map((k, i) => (
           <ScoreBar key={k} label={t.scoreLabel[k]} value={product[k]} gradient={scoreGradients[i]} />
@@ -298,11 +315,13 @@ function FinderTab() {
               <p className="text-sm text-slate-600 leading-relaxed mb-1">
                 {t.cheapestModelPrefix}{" "}
                 <span className="font-semibold">{displayBrand}</span>
-                {"-"}
-                {t.cheapestModelSuffix}{" "}
-                <span className="font-semibold">€{cheapestBrandProduct.price}</span>
                 {budgetCapLabel && <> {t.aboveYourBudget(gap)}</>}
               </p>
+              {cheapestBrandProduct.affiliate_url && (
+                <div className="mb-3">
+                  <AffiliateButton url={cheapestBrandProduct.affiliate_url} />
+                </div>
+              )}
               <p className="text-sm text-slate-500 mb-5">{t.contradiction1Sub}</p>
               <button
                 onClick={retryAfterContradiction}
@@ -606,10 +625,12 @@ function GoldenCircleColumn({ product }: { product: Product }) {
       <SectionLabel label={t.goldenWhat} />
       <div className="px-1 space-y-3">
         <div>
-          <div className="text-3xl font-bold text-slate-900 tracking-tight">€{product.price}</div>
-          <div className="mt-1.5">
-            <Badge product={product} />
-          </div>
+          <Badge product={product} />
+          {product.affiliate_url && (
+            <div className="mt-2">
+              <AffiliateButton url={product.affiliate_url} />
+            </div>
+          )}
         </div>
         <div className="flex flex-wrap gap-1">
           {product.useCases.map((uc) => (
@@ -719,12 +740,15 @@ function ProdukteTab() {
                 <div className="text-sm text-slate-400 mt-0.5">{p.brand}</div>
               </div>
               <div className="text-right shrink-0">
-                <div className="text-2xl font-bold text-slate-900 tracking-tight">€{p.price}</div>
-                <div className="mt-1.5">
-                  <Badge product={p} />
-                </div>
+                <Badge product={p} />
               </div>
             </div>
+
+            {p.affiliate_url && (
+              <div className="mb-3">
+                <AffiliateButton url={p.affiliate_url} />
+              </div>
+            )}
 
             <div className="flex flex-wrap gap-1.5 mb-4">
               {p.useCases.map((uc) => (
