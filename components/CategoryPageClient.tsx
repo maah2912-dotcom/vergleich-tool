@@ -691,7 +691,7 @@ function VergleichTab() {
 
 // ─── Produkte Tab ──────────────────────────────────────────────────────────────
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 9;
 
 function ProdukteTab({
   view,
