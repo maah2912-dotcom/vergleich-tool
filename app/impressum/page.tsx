@@ -19,33 +19,67 @@ export default function ImpressumPage() {
         <h1 className="text-2xl font-bold text-slate-900 mb-8">Impressum</h1>
 
         <div className="bg-white rounded-2xl border-2 border-slate-100 p-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+
           <section>
             <h2 className="font-semibold text-slate-900 mb-2">Angaben gemäß § 5 TMG</h2>
-            <p className="text-slate-500 italic">
-              [Name und Anschrift des Betreibers eintragen]
+            <p>
+              Ahmed Amin Maatalla<br />
+              Frankfurter Str. 13<br />
+              57074 Siegen
             </p>
           </section>
 
           <section>
             <h2 className="font-semibold text-slate-900 mb-2">Kontakt</h2>
-            <p className="text-slate-500 italic">[E-Mail-Adresse eintragen]</p>
-          </section>
-
-          <section>
-            <h2 className="font-semibold text-slate-900 mb-2">Haftungsausschluss</h2>
             <p>
-              Die Inhalte dieser Seite wurden mit größter Sorgfalt erstellt. Für die Richtigkeit,
-              Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.
+              Telefon: +49 (0) 176 30 34 34 14<br />
+              E-Mail:{" "}
+              <a
+                href="mailto:amarex06@outlook.com"
+                className="text-blue-600 hover:underline"
+              >
+                amarex06@outlook.com
+              </a>
             </p>
           </section>
 
           <section>
-            <h2 className="font-semibold text-slate-900 mb-2">Affiliate-Links</h2>
+            <h2 className="font-semibold text-slate-900 mb-2">
+              Streitschlichtung
+            </h2>
             <p>
-              Diese Website enthält Affiliate-Links. Wenn du über diese Links einkaufst, erhalten
-              wir eine Provision. Dir entstehen dabei keine Mehrkosten.
+              Die Europäische Kommission stellt eine Plattform zur
+              Online-Streitbeilegung (OS) bereit:{" "}
+              <a
+                href="https://ec.europa.eu/consumers/odr/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                https://ec.europa.eu/consumers/odr/
+              </a>
+              .
+            </p>
+            <p className="mt-2">
+              Wir sind nicht bereit oder verpflichtet, an
+              Streitbeilegungsverfahren vor einer
+              Verbraucherschlichtungsstelle teilzunehmen.
             </p>
           </section>
+
+          <section>
+            <h2 className="font-semibold text-slate-900 mb-2">
+              Affiliate-Links (Amazon Partnerprogramm)
+            </h2>
+            <p>
+              Diese Website nimmt am Amazon Partnerprogramm teil, einem
+              Affiliate-Programm, das es Websites ermöglicht, Werbeeinnahmen
+              durch Verlinkung mit Amazon.de zu erzielen. Wenn du über einen
+              solchen Link einkaufst, erhalten wir eine kleine Provision —
+              für dich entstehen dabei keine Mehrkosten.
+            </p>
+          </section>
+
         </div>
       </div>
     </div>

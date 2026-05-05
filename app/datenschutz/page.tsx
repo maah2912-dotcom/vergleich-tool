@@ -19,61 +19,91 @@ export default function DatenschutzPage() {
         <h1 className="text-2xl font-bold text-slate-900 mb-8">Datenschutzerklärung</h1>
 
         <div className="bg-white rounded-2xl border-2 border-slate-100 p-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+
           <section>
             <h2 className="font-semibold text-slate-900 mb-2">1. Datenschutz auf einen Blick</h2>
             <p>
-              Diese Website erhebt nur die Daten, die für den technischen Betrieb notwendig sind.
-              Es werden keine personenbezogenen Daten ohne Einwilligung weitergegeben.
+              Die Nutzung dieser Website ist in der Regel ohne Angabe
+              personenbezogener Daten möglich. Soweit Daten erhoben werden,
+              behandeln wir diese vertraulich und entsprechend den gesetzlichen
+              Datenschutzvorschriften sowie dieser Datenschutzerklärung.
             </p>
           </section>
 
           <section>
-            <h2 className="font-semibold text-slate-900 mb-2">2. Verantwortliche Stelle</h2>
-            <p className="text-slate-500 italic">[Verantwortliche Person und Kontaktdaten eintragen]</p>
-          </section>
-
-          <section>
-            <h2 className="font-semibold text-slate-900 mb-2">3. Cookies</h2>
+            <h2 className="font-semibold text-slate-900 mb-2">2. Verantwortlicher</h2>
             <p>
-              Diese Website verwendet keine Tracking-Cookies. Es werden ausschließlich technisch
-              notwendige Daten verarbeitet.
+              Ahmed Amin Maatalla<br />
+              Frankfurter Str. 13<br />
+              57074 Siegen<br />
+              E-Mail:{" "}
+              <a
+                href="mailto:amarex06@outlook.com"
+                className="text-blue-600 hover:underline"
+              >
+                amarex06@outlook.com
+              </a>
             </p>
           </section>
 
           <section>
-            <h2 className="font-semibold text-slate-900 mb-2">4. Hosting</h2>
+            <h2 className="font-semibold text-slate-900 mb-2">3. Hosting</h2>
             <p>
-              Diese Website wird über Vercel gehostet. Die Datenschutzerklärung von Vercel findest
-              du unter{" "}
-              <span className="text-blue-600">vercel.com/legal/privacy-policy</span>.
+              Diese Website wird gehostet von{" "}
+              <span className="font-medium">Vercel Inc.</span>, USA. Beim Aufruf
+              der Website werden Server-Logs erfasst, die technisch notwendige
+              Verbindungsdaten enthalten (IP-Adresse, Browsertyp, Zeitstempel).
+              Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f
+              DSGVO (berechtigtes Interesse am sicheren und stabilen Betrieb der
+              Website).
             </p>
           </section>
 
           <section>
-            <h2 className="font-semibold text-slate-900 mb-2">5. Datenbank</h2>
+            <h2 className="font-semibold text-slate-900 mb-2">4. Cookies & Tracking</h2>
             <p>
-              Produktdaten werden über Supabase (supabase.com) gespeichert. Es werden keine
-              personenbezogenen Daten in der Datenbank gespeichert.
+              Diese Website verwendet <span className="font-medium">keine Cookies</span> und
+              kein Tracking. Es werden keine Analyse- oder Werbe-Tools eingesetzt.
             </p>
           </section>
 
           <section>
-            <h2 className="font-semibold text-slate-900 mb-2">6. Affiliate-Links</h2>
+            <h2 className="font-semibold text-slate-900 mb-2">5. Affiliate-Links</h2>
             <p>
-              Diese Website enthält Affiliate-Links zu Drittanbietern. Beim Klick auf diese Links
-              können die jeweiligen Anbieter Cookies setzen. Bitte beachte die
-              Datenschutzerklärungen der jeweiligen Anbieter.
+              Diese Website nimmt am Amazon Partnerprogramm teil. Beim Kauf über
+              unsere Links erhalten wir eine Provision — für dich entstehen keine
+              Mehrkosten. Amazon verarbeitet beim Klick auf Affiliate-Links eigene
+              Daten gemäß seiner Datenschutzrichtlinie:{" "}
+              <a
+                href="https://www.amazon.de/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                amazon.de/privacy
+              </a>
+              .
             </p>
           </section>
 
           <section>
-            <h2 className="font-semibold text-slate-900 mb-2">7. Deine Rechte</h2>
+            <h2 className="font-semibold text-slate-900 mb-2">6. Deine Rechte</h2>
             <p>
-              Du hast das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der
-              Verarbeitung deiner personenbezogenen Daten. Kontaktiere uns dafür über die im
-              Impressum angegebene Adresse.
+              Du hast das Recht auf Auskunft, Berichtigung, Löschung,
+              Einschränkung der Verarbeitung sowie Widerspruch gegen die
+              Verarbeitung deiner personenbezogenen Daten (Art. 15–21 DSGVO).
+            </p>
+            <p className="mt-2">
+              Anfragen richtest du an:{" "}
+              <a
+                href="mailto:amarex06@outlook.com"
+                className="text-blue-600 hover:underline"
+              >
+                amarex06@outlook.com
+              </a>
             </p>
           </section>
+
         </div>
       </div>
     </div>
