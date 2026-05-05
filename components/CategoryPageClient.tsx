@@ -693,11 +693,16 @@ function VergleichTab() {
 
 const PAGE_SIZE = 8;
 
-function ProdukteTab() {
+function ProdukteTab({
+  view,
+  setView,
+}: {
+  view: "list" | "grid2" | "grid4";
+  setView: (v: "list" | "grid2" | "grid4") => void;
+}) {
   const t = useLang();
   const allProducts = useContext(ProductsCtx);
   const [search, setSearch] = useState("");
-  const [view, setView] = useState<"list" | "grid2" | "grid4">("list");
   const [page, setPage] = useState(0);
 
   const filtered = useMemo(() => {
@@ -828,46 +833,65 @@ function ProdukteTab() {
               </p>
             </div>
           ) : view === "grid2" ? (
-            // ── 2-col card: compact ─────────────────────────────────────────
+            // ── 2-col card: volles Layout ───────────────────────────────────
             <div
               key={p.id}
-              className="rounded-2xl border-2 border-slate-100 bg-white p-4 hover:border-slate-200 hover:shadow-sm transition-all flex flex-col gap-2"
+              className="rounded-2xl border-2 border-slate-100 bg-white p-5 hover:border-slate-200 hover:shadow-sm transition-all"
             >
-              <div>
-                <div className="font-semibold text-slate-900 text-sm leading-snug">{p.name}</div>
-                <div className="text-xs text-slate-400 mt-0.5">{p.brand}</div>
+              <div className="flex items-start justify-between gap-4 mb-3">
+                <div>
+                  <div className="font-semibold text-slate-900 text-base leading-snug">{p.name}</div>
+                  <div className="text-sm text-slate-400 mt-0.5">{p.brand}</div>
+                </div>
+                <div className="shrink-0">
+                  <Badge product={p} />
+                </div>
               </div>
-              <Badge product={p} />
-              <div className="flex flex-wrap gap-1">
-                {p.useCases.slice(0, 2).map((uc) => (
-                  <span key={uc} className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full">
-                    {useCaseIcon[uc]}
+              {p.affiliate_url && (
+                <div className="mb-3">
+                  <AffiliateButton url={p.affiliate_url} />
+                </div>
+              )}
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {p.useCases.map((uc) => (
+                  <span key={uc} className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full">
+                    {useCaseIcon[uc]} {t.useCaseLabel[uc]}
                   </span>
+                ))}
+                <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 bg-blue-50 text-blue-600 rounded-full">
+                  {ecosystemIcon[p.ecosystem]} {t.ecosystemLabel[p.ecosystem]}
+                </span>
+              </div>
+              <div className="grid grid-cols-3 gap-x-5 gap-y-3">
+                {scoreKeys.map((k, idx) => (
+                  <ScoreBar key={k} label={t.scoreLabel[k]} value={p[k]} gradient={scoreGradients[idx]} />
+                ))}
+              </div>
+              <p className="text-xs text-slate-500 mt-4 pt-4 border-t border-slate-100 leading-relaxed">
+                {p.note}
+              </p>
+            </div>
+          ) : (
+            // ── 4-col card: Name, Brand, Badge, 3 Scores, Affiliate ─────────
+            <div
+              key={p.id}
+              className="rounded-2xl border-2 border-slate-100 bg-white p-4 hover:border-slate-200 hover:shadow-sm transition-all"
+            >
+              <div className="flex items-start justify-between gap-2 mb-3">
+                <div>
+                  <div className="font-semibold text-slate-900 text-sm leading-snug">{p.name}</div>
+                  <div className="text-xs text-slate-400 mt-0.5">{p.brand}</div>
+                </div>
+                <div className="shrink-0">
+                  <Badge product={p} />
+                </div>
+              </div>
+              <div className="space-y-2.5 mb-3">
+                {(["sound", "anc", "battery"] as ScoreKey[]).map((k, i) => (
+                  <ScoreBar key={k} label={t.scoreLabel[k]} value={p[k]} gradient={scoreGradients[i]} />
                 ))}
               </div>
               {p.affiliate_url && <AffiliateButton url={p.affiliate_url} />}
-            </div>
-          ) : (
-            // ── 4-col card: minimal ─────────────────────────────────────────
-            <div
-              key={p.id}
-              className="rounded-2xl border-2 border-slate-100 bg-white p-3 hover:border-slate-200 hover:shadow-sm transition-all flex flex-col gap-2"
-            >
-              <div>
-                <div className="font-semibold text-slate-900 text-xs leading-snug">{p.name}</div>
-                <div className="text-xs text-slate-400">{p.brand}</div>
-              </div>
-              <Badge product={p} />
-              {p.affiliate_url && (
-                <a
-                  href={p.affiliate_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-semibold text-amber-700 hover:text-amber-800 transition-colors"
-                >
-                  Amazon →
-                </a>
-              )}
             </div>
           )
         )}
@@ -915,6 +939,7 @@ function AppContent({
   const t = useLang();
   const allProducts = useContext(ProductsCtx);
   const [active, setActive] = useState<Tab>("finder");
+  const [view, setView] = useState<"list" | "grid2" | "grid4">("list");
 
   const tabItems: { id: Tab; label: string; icon: string }[] = [
     { id: "finder", label: t.tabs.finder, icon: "🎯" },
@@ -983,7 +1008,9 @@ function AppContent({
       {/* Content */}
       <div
         className={`mx-auto px-4 py-8 pb-24 transition-all duration-300 ${
-          active === "vergleich" ? "max-w-4xl" : "max-w-lg"
+          active === "vergleich" || (active === "produkte" && view !== "list")
+            ? "max-w-4xl"
+            : "max-w-lg"
         }`}
       >
         <div className="bg-white rounded-2xl border-2 border-slate-100 p-6 shadow-sm">
@@ -994,7 +1021,7 @@ function AppContent({
             <VergleichTab />
           </div>
           <div className={active !== "produkte" ? "hidden" : ""}>
-            <ProdukteTab />
+            <ProdukteTab view={view} setView={setView} />
           </div>
         </div>
       </div>
