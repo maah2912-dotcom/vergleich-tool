@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, createContext, useContext } from "react";
+import { useState, useMemo, useEffect, createContext, useContext } from "react";
 import { scoreProduct, PRICE_CAPS } from "@/lib/products";
 import { translations, type Lang } from "@/lib/i18n";
 import type { Product, Category, UseCase, Budget, Ecosystem, ScoreKey } from "@/lib/types";
@@ -691,10 +691,14 @@ function VergleichTab() {
 
 // ─── Produkte Tab ──────────────────────────────────────────────────────────────
 
+const PAGE_SIZE = 8;
+
 function ProdukteTab() {
   const t = useLang();
   const allProducts = useContext(ProductsCtx);
   const [search, setSearch] = useState("");
+  const [view, setView] = useState<"list" | "grid2" | "grid4">("list");
+  const [page, setPage] = useState(0);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
@@ -706,21 +710,68 @@ function ProdukteTab() {
     );
   }, [search, allProducts, t]);
 
+  useEffect(() => { setPage(0); }, [search, view]);
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paginated = useMemo(
+    () => filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE),
+    [filtered, page]
+  );
+
+  const toggleBtn = (active: boolean) =>
+    `p-1.5 rounded-lg transition-all ${active ? "bg-slate-900 text-white" : "text-slate-400 hover:text-slate-700"}`;
+
   return (
     <div>
-      <div className="relative mb-6">
-        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
-          🔍
-        </span>
-        <input
-          type="search"
-          placeholder={t.searchPlaceholder}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full border-2 border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all"
-        />
+      {/* Search + View toggle */}
+      <div className="flex items-center gap-2 mb-6">
+        <div className="relative flex-1">
+          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+            🔍
+          </span>
+          <input
+            type="search"
+            placeholder={t.searchPlaceholder}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full border-2 border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all"
+          />
+        </div>
+        <div className="flex items-center gap-1 shrink-0 border-2 border-slate-200 rounded-xl p-1">
+          {/* List */}
+          <button onClick={() => setView("list")} title="Liste" className={toggleBtn(view === "list")}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="0" y="1"  width="14" height="2" rx="1" fill="currentColor"/>
+              <rect x="0" y="6"  width="14" height="2" rx="1" fill="currentColor"/>
+              <rect x="0" y="11" width="14" height="2" rx="1" fill="currentColor"/>
+            </svg>
+          </button>
+          {/* 2-col */}
+          <button onClick={() => setView("grid2")} title="2 Spalten" className={toggleBtn(view === "grid2")}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="0" y="0" width="6" height="6" rx="1" fill="currentColor"/>
+              <rect x="8" y="0" width="6" height="6" rx="1" fill="currentColor"/>
+              <rect x="0" y="8" width="6" height="6" rx="1" fill="currentColor"/>
+              <rect x="8" y="8" width="6" height="6" rx="1" fill="currentColor"/>
+            </svg>
+          </button>
+          {/* 4-col — desktop only */}
+          <button onClick={() => setView("grid4")} title="4 Spalten" className={`hidden sm:block ${toggleBtn(view === "grid4")}`}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="0"    y="0"   width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
+              <rect x="3.8"  y="0"   width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
+              <rect x="7.7"  y="0"   width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
+              <rect x="11.5" y="0"   width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
+              <rect x="0"    y="8.5" width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
+              <rect x="3.8"  y="8.5" width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
+              <rect x="7.7"  y="8.5" width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
+              <rect x="11.5" y="8.5" width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
+      {/* Empty state */}
       {filtered.length === 0 && (
         <div className="text-center py-12">
           <div className="text-3xl mb-2">🔇</div>
@@ -728,59 +779,122 @@ function ProdukteTab() {
         </div>
       )}
 
-      <div className="space-y-4">
-        {filtered.map((p) => (
-          <div
-            key={p.id}
-            className="rounded-2xl border-2 border-slate-100 bg-white p-5 hover:border-slate-200 hover:shadow-sm transition-all"
-          >
-            <div className="flex items-start justify-between gap-4 mb-3">
-              <div>
-                <div className="font-semibold text-slate-900 text-base leading-snug">{p.name}</div>
-                <div className="text-sm text-slate-400 mt-0.5">{p.brand}</div>
+      {/* Product cards */}
+      <div className={
+        view === "list"
+          ? "space-y-4"
+          : view === "grid2"
+            ? "grid grid-cols-2 gap-3"
+            : "grid grid-cols-2 sm:grid-cols-4 gap-3"
+      }>
+        {paginated.map((p) =>
+          view === "list" ? (
+            // ── List card: full layout ──────────────────────────────────────
+            <div
+              key={p.id}
+              className="rounded-2xl border-2 border-slate-100 bg-white p-5 hover:border-slate-200 hover:shadow-sm transition-all"
+            >
+              <div className="flex items-start justify-between gap-4 mb-3">
+                <div>
+                  <div className="font-semibold text-slate-900 text-base leading-snug">{p.name}</div>
+                  <div className="text-sm text-slate-400 mt-0.5">{p.brand}</div>
+                </div>
+                <div className="shrink-0">
+                  <Badge product={p} />
+                </div>
               </div>
-              <div className="text-right shrink-0">
-                <Badge product={p} />
-              </div>
-            </div>
-
-            {p.affiliate_url && (
-              <div className="mb-3">
-                <AffiliateButton url={p.affiliate_url} />
-              </div>
-            )}
-
-            <div className="flex flex-wrap gap-1.5 mb-4">
-              {p.useCases.map((uc) => (
-                <span
-                  key={uc}
-                  className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full"
-                >
-                  {useCaseIcon[uc]} {t.useCaseLabel[uc]}
+              {p.affiliate_url && (
+                <div className="mb-3">
+                  <AffiliateButton url={p.affiliate_url} />
+                </div>
+              )}
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {p.useCases.map((uc) => (
+                  <span key={uc} className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full">
+                    {useCaseIcon[uc]} {t.useCaseLabel[uc]}
+                  </span>
+                ))}
+                <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 bg-blue-50 text-blue-600 rounded-full">
+                  {ecosystemIcon[p.ecosystem]} {t.ecosystemLabel[p.ecosystem]}
                 </span>
-              ))}
-              <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 bg-blue-50 text-blue-600 rounded-full">
-                {ecosystemIcon[p.ecosystem]} {t.ecosystemLabel[p.ecosystem]}
-              </span>
+              </div>
+              <div className="grid grid-cols-3 gap-x-5 gap-y-3">
+                {scoreKeys.map((k, idx) => (
+                  <ScoreBar key={k} label={t.scoreLabel[k]} value={p[k]} gradient={scoreGradients[idx]} />
+                ))}
+              </div>
+              <p className="text-xs text-slate-500 mt-4 pt-4 border-t border-slate-100 leading-relaxed">
+                {p.note}
+              </p>
             </div>
-
-            <div className="grid grid-cols-3 gap-x-5 gap-y-3">
-              {scoreKeys.map((k, idx) => (
-                <ScoreBar
-                  key={k}
-                  label={t.scoreLabel[k]}
-                  value={p[k]}
-                  gradient={scoreGradients[idx]}
-                />
-              ))}
+          ) : view === "grid2" ? (
+            // ── 2-col card: compact ─────────────────────────────────────────
+            <div
+              key={p.id}
+              className="rounded-2xl border-2 border-slate-100 bg-white p-4 hover:border-slate-200 hover:shadow-sm transition-all flex flex-col gap-2"
+            >
+              <div>
+                <div className="font-semibold text-slate-900 text-sm leading-snug">{p.name}</div>
+                <div className="text-xs text-slate-400 mt-0.5">{p.brand}</div>
+              </div>
+              <Badge product={p} />
+              <div className="flex flex-wrap gap-1">
+                {p.useCases.slice(0, 2).map((uc) => (
+                  <span key={uc} className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full">
+                    {useCaseIcon[uc]}
+                  </span>
+                ))}
+              </div>
+              {p.affiliate_url && <AffiliateButton url={p.affiliate_url} />}
             </div>
-
-            <p className="text-xs text-slate-500 mt-4 pt-4 border-t border-slate-100 leading-relaxed">
-              {p.note}
-            </p>
-          </div>
-        ))}
+          ) : (
+            // ── 4-col card: minimal ─────────────────────────────────────────
+            <div
+              key={p.id}
+              className="rounded-2xl border-2 border-slate-100 bg-white p-3 hover:border-slate-200 hover:shadow-sm transition-all flex flex-col gap-2"
+            >
+              <div>
+                <div className="font-semibold text-slate-900 text-xs leading-snug">{p.name}</div>
+                <div className="text-xs text-slate-400">{p.brand}</div>
+              </div>
+              <Badge product={p} />
+              {p.affiliate_url && (
+                <a
+                  href={p.affiliate_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-semibold text-amber-700 hover:text-amber-800 transition-colors"
+                >
+                  Amazon →
+                </a>
+              )}
+            </div>
+          )
+        )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-100">
+          <button
+            onClick={() => setPage((p) => p - 1)}
+            disabled={page === 0}
+            className="px-4 py-2 rounded-xl border-2 border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          >
+            ← Zurück
+          </button>
+          <span className="text-xs font-medium text-slate-400 tabular-nums">
+            {page + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            disabled={page === totalPages - 1}
+            className="px-4 py-2 rounded-xl border-2 border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          >
+            Weiter →
+          </button>
+        </div>
+      )}
     </div>
   );
 }
