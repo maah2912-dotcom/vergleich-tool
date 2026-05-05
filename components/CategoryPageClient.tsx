@@ -697,8 +697,8 @@ function ProdukteTab({
   view,
   setView,
 }: {
-  view: "list" | "grid2" | "grid4";
-  setView: (v: "list" | "grid2" | "grid4") => void;
+  view: "list" | "grid3";
+  setView: (v: "list" | "grid3") => void;
 }) {
   const t = useLang();
   const allProducts = useContext(ProductsCtx);
@@ -751,26 +751,15 @@ function ProdukteTab({
               <rect x="0" y="11" width="14" height="2" rx="1" fill="currentColor"/>
             </svg>
           </button>
-          {/* 2-col */}
-          <button onClick={() => setView("grid2")} title="2 Spalten" className={toggleBtn(view === "grid2")}>
+          {/* 3-col — desktop only */}
+          <button onClick={() => setView("grid3")} title="3 Spalten" className={`hidden sm:block ${toggleBtn(view === "grid3")}`}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <rect x="0" y="0" width="6" height="6" rx="1" fill="currentColor"/>
-              <rect x="8" y="0" width="6" height="6" rx="1" fill="currentColor"/>
-              <rect x="0" y="8" width="6" height="6" rx="1" fill="currentColor"/>
-              <rect x="8" y="8" width="6" height="6" rx="1" fill="currentColor"/>
-            </svg>
-          </button>
-          {/* 4-col — desktop only */}
-          <button onClick={() => setView("grid4")} title="4 Spalten" className={`hidden sm:block ${toggleBtn(view === "grid4")}`}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <rect x="0"    y="0"   width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
-              <rect x="3.8"  y="0"   width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
-              <rect x="7.7"  y="0"   width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
-              <rect x="11.5" y="0"   width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
-              <rect x="0"    y="8.5" width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
-              <rect x="3.8"  y="8.5" width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
-              <rect x="7.7"  y="8.5" width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
-              <rect x="11.5" y="8.5" width="2.5" height="5.5" rx="0.5" fill="currentColor"/>
+              <rect x="0"   y="0" width="3.5" height="6" rx="0.5" fill="currentColor"/>
+              <rect x="5.2" y="0" width="3.5" height="6" rx="0.5" fill="currentColor"/>
+              <rect x="10.5" y="0" width="3.5" height="6" rx="0.5" fill="currentColor"/>
+              <rect x="0"   y="8" width="3.5" height="6" rx="0.5" fill="currentColor"/>
+              <rect x="5.2" y="8" width="3.5" height="6" rx="0.5" fill="currentColor"/>
+              <rect x="10.5" y="8" width="3.5" height="6" rx="0.5" fill="currentColor"/>
             </svg>
           </button>
         </div>
@@ -785,55 +774,10 @@ function ProdukteTab({
       )}
 
       {/* Product cards */}
-      <div className={
-        view === "list"
-          ? "space-y-4"
-          : view === "grid2"
-            ? "grid grid-cols-2 gap-3"
-            : "grid grid-cols-2 sm:grid-cols-4 gap-3"
-      }>
+      <div className={view === "list" ? "space-y-4" : "grid grid-cols-1 sm:grid-cols-3 gap-4"}>
         {paginated.map((p) =>
           view === "list" ? (
-            // ── List card: full layout ──────────────────────────────────────
-            <div
-              key={p.id}
-              className="rounded-2xl border-2 border-slate-100 bg-white p-5 hover:border-slate-200 hover:shadow-sm transition-all"
-            >
-              <div className="flex items-start justify-between gap-4 mb-3">
-                <div>
-                  <div className="font-semibold text-slate-900 text-base leading-snug">{p.name}</div>
-                  <div className="text-sm text-slate-400 mt-0.5">{p.brand}</div>
-                </div>
-                <div className="shrink-0">
-                  <Badge product={p} />
-                </div>
-              </div>
-              {p.affiliate_url && (
-                <div className="mb-3">
-                  <AffiliateButton url={p.affiliate_url} />
-                </div>
-              )}
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {p.useCases.map((uc) => (
-                  <span key={uc} className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full">
-                    {useCaseIcon[uc]} {t.useCaseLabel[uc]}
-                  </span>
-                ))}
-                <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 bg-blue-50 text-blue-600 rounded-full">
-                  {ecosystemIcon[p.ecosystem]} {t.ecosystemLabel[p.ecosystem]}
-                </span>
-              </div>
-              <div className="grid grid-cols-3 gap-x-5 gap-y-3">
-                {scoreKeys.map((k, idx) => (
-                  <ScoreBar key={k} label={t.scoreLabel[k]} value={p[k]} gradient={scoreGradients[idx]} />
-                ))}
-              </div>
-              <p className="text-xs text-slate-500 mt-4 pt-4 border-t border-slate-100 leading-relaxed">
-                {p.note}
-              </p>
-            </div>
-          ) : view === "grid2" ? (
-            // ── 2-col card: volles Layout ───────────────────────────────────
+            // ── List card ──────────────────────────────────────────────────
             <div
               key={p.id}
               className="rounded-2xl border-2 border-slate-100 bg-white p-5 hover:border-slate-200 hover:shadow-sm transition-all"
@@ -872,13 +816,13 @@ function ProdukteTab({
               </p>
             </div>
           ) : (
-            // ── 4-col card: Name, Brand, Badge, 3 Scores, Affiliate ─────────
+            // ── 3-col card: alles sichtbar ─────────────────────────────────
             <div
               key={p.id}
-              className="rounded-2xl border-2 border-slate-100 bg-white p-4 hover:border-slate-200 hover:shadow-sm transition-all"
+              className="rounded-2xl border-2 border-slate-100 bg-white p-5 hover:border-slate-200 hover:shadow-sm transition-all flex flex-col"
             >
-              <div className="flex items-start justify-between gap-2 mb-3">
-                <div>
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="min-w-0">
                   <div className="font-semibold text-slate-900 text-sm leading-snug">{p.name}</div>
                   <div className="text-xs text-slate-400 mt-0.5">{p.brand}</div>
                 </div>
@@ -886,11 +830,24 @@ function ProdukteTab({
                   <Badge product={p} />
                 </div>
               </div>
+              <div className="flex flex-wrap gap-1 mb-3">
+                {p.useCases.map((uc) => (
+                  <span key={uc} className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full">
+                    {useCaseIcon[uc]} {t.useCaseLabel[uc]}
+                  </span>
+                ))}
+                <span className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full">
+                  {ecosystemIcon[p.ecosystem]} {t.ecosystemLabel[p.ecosystem]}
+                </span>
+              </div>
               <div className="space-y-2.5 mb-3">
-                {(["sound", "anc", "battery"] as ScoreKey[]).map((k, i) => (
-                  <ScoreBar key={k} label={t.scoreLabel[k]} value={p[k]} gradient={scoreGradients[i]} />
+                {scoreKeys.map((k, idx) => (
+                  <ScoreBar key={k} label={t.scoreLabel[k]} value={p[k]} gradient={scoreGradients[idx]} />
                 ))}
               </div>
+              <p className="text-xs text-slate-500 pt-3 border-t border-slate-100 leading-relaxed mb-3">
+                {p.note}
+              </p>
               {p.affiliate_url && <AffiliateButton url={p.affiliate_url} />}
             </div>
           )
@@ -939,7 +896,7 @@ function AppContent({
   const t = useLang();
   const allProducts = useContext(ProductsCtx);
   const [active, setActive] = useState<Tab>("finder");
-  const [view, setView] = useState<"list" | "grid2" | "grid4">("list");
+  const [view, setView] = useState<"list" | "grid3">("list");
 
   const tabItems: { id: Tab; label: string; icon: string }[] = [
     { id: "finder", label: t.tabs.finder, icon: "🎯" },
@@ -1008,9 +965,11 @@ function AppContent({
       {/* Content */}
       <div
         className={`mx-auto px-4 py-8 pb-24 transition-all duration-300 ${
-          active === "vergleich" || (active === "produkte" && view !== "list")
+          active === "vergleich"
             ? "max-w-4xl"
-            : "max-w-lg"
+            : active === "produkte" && view === "grid3"
+              ? "max-w-6xl"
+              : "max-w-lg"
         }`}
       >
         <div className="bg-white rounded-2xl border-2 border-slate-100 p-6 shadow-sm">
