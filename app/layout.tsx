@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Vergleich-Tool",
-    template: "%s | Vergleich-Tool",
+    default: "Compare Smart",
+    template: "%s | Compare Smart",
   },
   description: "Finde das beste Produkt. Sofort.",
 };
