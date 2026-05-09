@@ -14,11 +14,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://compare.byamarex.com"),
   title: {
     default: "Compare Smart",
     template: "%s | Compare Smart",
   },
-  description: "Finde das beste Produkt. Sofort.",
+  description:
+    "Smarte Produktvergleiche in 3 Schritten. 4 Fragen. 3 Empfehlungen. Keine Kompromisse.",
+  openGraph: {
+    siteName: "Compare Smart",
+    locale: "de_DE",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -28,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="de"
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
