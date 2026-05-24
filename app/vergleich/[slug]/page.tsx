@@ -124,16 +124,6 @@ export default async function ArticlePage({ params }: Props) {
 
         {/* Article body */}
         <div className="max-w-4xl mx-auto px-4 py-8">
-          {/* Affiliate disclosure */}
-          <div className="rounded-2xl border-2 border-amber-200 bg-amber-50 p-4 mb-8">
-            <p className="text-xs text-amber-800 leading-relaxed">
-              <span className="font-semibold">Affiliate-Hinweis:</span> Dieser
-              Artikel enthält Amazon-Partnerlinks. Wenn du darüber kaufst,
-              erhalten wir eine kleine Provision – für dich ändert sich am Preis
-              nichts. Unsere Bewertungen bleiben unabhängig.
-            </p>
-          </div>
-
           <article className="prose prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h2:text-2xl prose-h2:mt-10 prose-h3:text-xl prose-p:text-slate-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-strong:text-slate-900">
             <MDXRemote
               source={article.content}
