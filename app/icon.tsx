@@ -1,10 +1,9 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Compare Smart";
-export const size = { width: 1200, height: 630 };
+export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
-export default function Image() {
+export default function Icon() {
   return new ImageResponse(
     (
       <div
@@ -12,8 +11,8 @@ export default function Image() {
           width: "100%",
           height: "100%",
           background: "#111111",
+          borderRadius: "6px",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -22,9 +21,8 @@ export default function Image() {
           style={{
             fontFamily: "Georgia, serif",
             fontWeight: 700,
-            fontSize: "320px",
-            letterSpacing: "-12px",
-            lineHeight: 1,
+            fontSize: "20px",
+            letterSpacing: "-1px",
             backgroundImage:
               "linear-gradient(to bottom, #ffffff 0%, #dddddd 50%, #999999 100%)",
             backgroundClip: "text",
@@ -32,17 +30,6 @@ export default function Image() {
           }}
         >
           CS
-        </div>
-        <div
-          style={{
-            marginTop: "32px",
-            fontFamily: "Georgia, serif",
-            fontSize: "40px",
-            color: "#666666",
-            letterSpacing: "1px",
-          }}
-        >
-          Compare Smart
         </div>
       </div>
     ),
