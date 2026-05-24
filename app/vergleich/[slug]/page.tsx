@@ -142,7 +142,7 @@ export default async function ArticlePage({ params }: Props) {
               Produkt – ganz ohne Vergleichstabellen-Stress.
             </p>
             <Link
-              href="/"
+              href="/#finder"
               className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-all shadow-sm shadow-blue-200"
             >
               Zum Produkt-Finder →
