@@ -87,7 +87,7 @@ export default function ArticleAccordion({
       <Section
         title="Ausführlicher Vergleich"
         defaultOpen={false}
-        contentClassName="prose prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h2:text-2xl prose-h2:font-bold prose-h2:text-slate-900 prose-h2:mt-10 prose-h2:mb-4 prose-h2:border-t prose-h2:border-slate-100 prose-h2:pt-8 prose-h2:first:border-t-0 prose-h2:first:pt-0 prose-h2:first:mt-0 prose-p:mb-5 prose-p:leading-relaxed prose-p:text-base prose-p:text-slate-700 prose-strong:text-slate-900"
+        contentClassName="prose prose-slate max-w-none prose-p:mb-5 prose-p:leading-relaxed prose-p:text-base prose-p:text-slate-700 prose-strong:text-slate-900 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:pt-8 [&_h2]:border-t [&_h2]:border-slate-200 [&_h2:first-child]:border-t-0 [&_h2:first-child]:pt-0 [&_h2:first-child]:mt-0"
       >
         {details}
       </Section>
