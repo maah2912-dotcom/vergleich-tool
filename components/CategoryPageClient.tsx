@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, createContext, useContext } from "react";
+import Link from "next/link";
 import { scoreProduct, PRICE_CAPS } from "@/lib/products";
 import { translations, type Lang } from "@/lib/i18n";
 import type { Product, Category, UseCase, Budget, Ecosystem, ScoreKey } from "@/lib/types";
@@ -898,10 +899,11 @@ function AppContent({
   const [active, setActive] = useState<Tab>("finder");
   const [view, setView] = useState<"list" | "grid3">("list");
 
-  const tabItems: { id: Tab; label: string; icon: string }[] = [
+  const tabItems: { id: Tab | "artikel"; label: string; icon: string; href?: string }[] = [
     { id: "finder", label: t.tabs.finder, icon: "🎯" },
     { id: "vergleich", label: t.tabs.vergleich, icon: "⚖️" },
     { id: "produkte", label: t.tabs.produkte, icon: "📋" },
+    { id: "artikel", label: t.tabs.artikel, icon: "📰", href: "/vergleich" },
   ];
 
   const categoryName = getCategoryName(category, lang);
@@ -945,20 +947,31 @@ function AppContent({
       {/* Sticky tab bar */}
       <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-4 py-2.5">
         <div className="max-w-lg mx-auto flex gap-1 bg-slate-100 rounded-xl p-1">
-          {tabItems.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActive(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-sm font-semibold rounded-lg transition-all ${
-                active === tab.id
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
-            >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
-            </button>
-          ))}
+          {tabItems.map((tab) =>
+            tab.href ? (
+              <Link
+                key={tab.id}
+                href={tab.href}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2 text-sm font-semibold rounded-lg transition-all text-slate-500 hover:text-slate-700"
+              >
+                <span>{tab.icon}</span>
+                <span>{tab.label}</span>
+              </Link>
+            ) : (
+              <button
+                key={tab.id}
+                onClick={() => setActive(tab.id as Tab)}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-sm font-semibold rounded-lg transition-all ${
+                  active === tab.id
+                    ? "bg-white text-slate-900 shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                <span>{tab.icon}</span>
+                <span>{tab.label}</span>
+              </button>
+            )
+          )}
         </div>
       </div>
 

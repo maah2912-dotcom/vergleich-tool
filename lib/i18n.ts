@@ -6,7 +6,7 @@ export interface Translation {
   heroSub: string;
   heroSync: (n: number) => string;
   // Navigation tabs
-  tabs: { finder: string; vergleich: string; produkte: string };
+  tabs: { finder: string; vergleich: string; produkte: string; artikel: string };
   // Finder steps
   budgetLabel: Record<"budget" | "mid" | "any", string>;
   allBrands: string;
@@ -61,7 +61,7 @@ const de: Translation = {
   heroTitle: "Finde den besten",
   heroSub: "4 Fragen.  3 Empfehlungen.  Keine Kompromisse.",
   heroSync: (n) => `${n} Produkte im Vergleich`,
-  tabs: { finder: "Finder", vergleich: "Vergleich", produkte: "Produkte" },
+  tabs: { finder: "Finder", vergleich: "Vergleich", produkte: "Produkte", artikel: "Artikel" },
   budgetLabel: {
     budget: "Budget  ·  bis €100",
     mid: "Mittelklasse  ·  bis €200",
@@ -139,7 +139,7 @@ const en: Translation = {
   heroTitle: "Find the best",
   heroSub: "4 questions.  3 picks.  No compromises.",
   heroSync: (n) => `${n} products compared`,
-  tabs: { finder: "Finder", vergleich: "Compare", produkte: "Products" },
+  tabs: { finder: "Finder", vergleich: "Compare", produkte: "Products", artikel: "Articles" },
   budgetLabel: {
     budget: "Budget  ·  up to €100",
     mid: "Mid-range  ·  up to €200",
@@ -217,7 +217,7 @@ const fr: Translation = {
   heroTitle: "Trouve les meilleurs",
   heroSub: "4 questions.  3 choix.  Zéro compromis.",
   heroSync: (n) => `${n} produits comparés`,
-  tabs: { finder: "Finder", vergleich: "Comparer", produkte: "Produits" },
+  tabs: { finder: "Finder", vergleich: "Comparer", produkte: "Produits", artikel: "Articles" },
   budgetLabel: {
     budget: "Entrée de gamme  ·  jusqu'à €100",
     mid: "Milieu de gamme  ·  jusqu'à €200",
