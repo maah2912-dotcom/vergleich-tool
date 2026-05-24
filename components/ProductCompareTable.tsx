@@ -76,13 +76,11 @@ export default async function ProductCompareTable({
     );
   }
 
-  const labelWidth = "180px";
-
   return (
-    <div className="not-prose my-8 rounded-2xl border-2 border-slate-100 bg-white overflow-x-auto">
-      <table className="w-full text-sm" style={{ minWidth: `${180 + products.length * 180}px` }}>
+    <div className="not-prose my-8 rounded-2xl border-2 border-slate-100 bg-white">
+      <table className="w-full text-sm table-fixed">
         <colgroup>
-          <col style={{ width: labelWidth }} />
+          <col className="w-[96px] sm:w-[140px] md:w-[180px]" />
           {products.map((p) => (
             <col key={p.id} />
           ))}
@@ -92,16 +90,16 @@ export default async function ProductCompareTable({
           <tr className="border-b-2 border-slate-100">
             <th
               scope="row"
-              className="text-left align-top px-4 py-4 text-xs font-bold uppercase tracking-widest text-slate-400"
+              className="text-left align-top px-2 sm:px-2 sm:px-4 py-2.5 sm:py-3 sm:py-4 text-xs font-bold uppercase tracking-widest text-slate-400"
             >
               Produkt
             </th>
             {products.map((p) => (
-              <td key={p.id} className="px-4 py-4 align-top">
-                <div className="font-bold text-slate-900 text-base leading-tight">
+              <td key={p.id} className="px-2 sm:px-2 sm:px-4 py-2.5 sm:py-3 sm:py-4 align-top">
+                <div className="font-bold text-slate-900 text-sm sm:text-base leading-tight break-words">
                   {p.name}
                 </div>
-                <div className="text-xs text-slate-400 mt-0.5">{p.brand}</div>
+                <div className="text-xs text-slate-400 mt-0.5 break-words">{p.brand}</div>
               </td>
             ))}
           </tr>
@@ -110,12 +108,12 @@ export default async function ProductCompareTable({
           <tr className="border-b border-slate-100">
             <th
               scope="row"
-              className="text-left px-4 py-3 text-xs font-semibold text-slate-500"
+              className="text-left px-2 sm:px-4 py-2.5 sm:py-3 text-xs font-semibold text-slate-500"
             >
               Preis
             </th>
             {products.map((p) => (
-              <td key={p.id} className="px-4 py-3">
+              <td key={p.id} className="px-2 sm:px-4 py-2.5 sm:py-3">
                 <span className="text-sm font-semibold text-slate-900 tabular-nums">
                   €{p.price}
                 </span>
@@ -128,12 +126,12 @@ export default async function ProductCompareTable({
             <tr key={row.key} className="border-b border-slate-100">
               <th
                 scope="row"
-                className="text-left px-4 py-3 text-xs font-semibold text-slate-500"
+                className="text-left px-2 sm:px-4 py-2.5 sm:py-3 text-xs font-semibold text-slate-500"
               >
                 {row.label}
               </th>
               {products.map((p) => (
-                <td key={p.id} className="px-4 py-3">
+                <td key={p.id} className="px-2 sm:px-4 py-2.5 sm:py-3">
                   <ScoreBar value={p[row.key] as number} gradient={row.gradient} />
                 </td>
               ))}
@@ -144,12 +142,12 @@ export default async function ProductCompareTable({
           <tr>
             <th
               scope="row"
-              className="text-left px-4 py-4 text-xs font-semibold text-slate-500"
+              className="text-left px-2 sm:px-2 sm:px-4 py-2.5 sm:py-3 sm:py-4 text-xs font-semibold text-slate-500"
             >
               Bei Amazon
             </th>
             {products.map((p) => (
-              <td key={p.id} className="px-4 py-4">
+              <td key={p.id} className="px-2 sm:px-2 sm:px-4 py-2.5 sm:py-3 sm:py-4">
                 {p.affiliate_url ? (
                   <a
                     href={p.affiliate_url}

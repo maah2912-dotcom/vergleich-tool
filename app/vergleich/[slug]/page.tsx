@@ -92,7 +92,7 @@ export default async function ArticlePage({ params }: Props) {
       <div className="min-h-screen bg-slate-50">
         {/* Header */}
         <div className="bg-slate-900 px-4 pt-10 pb-12">
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <Link
               href="/vergleich"
               className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-200 transition-colors mb-5"
@@ -123,7 +123,7 @@ export default async function ArticlePage({ params }: Props) {
         </div>
 
         {/* Article body */}
-        <div className="max-w-2xl mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-4 py-8">
           {/* Affiliate disclosure */}
           <div className="rounded-2xl border-2 border-amber-200 bg-amber-50 p-4 mb-8">
             <p className="text-xs text-amber-800 leading-relaxed">
@@ -162,7 +162,7 @@ export default async function ArticlePage({ params }: Props) {
 
         {/* Footer */}
         <div className="border-t border-slate-200 bg-white px-4 py-5 mt-12">
-          <div className="max-w-2xl mx-auto flex gap-4">
+          <div className="max-w-4xl mx-auto flex gap-4">
             <Link
               href="/impressum"
               className="text-xs text-slate-400 hover:text-slate-600 underline underline-offset-2 transition-colors"
