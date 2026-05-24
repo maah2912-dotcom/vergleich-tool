@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllArticles, getArticleBySlug } from "@/lib/content";
 import ProductCompareTable from "@/components/ProductCompareTable";
+import ArticleAccordion from "@/components/ArticleAccordion";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -50,6 +51,7 @@ function formatDate(iso: string): string {
 
 const mdxComponents = {
   ProductCompareTable,
+  ArticleAccordion,
 };
 
 export default async function ArticlePage({ params }: Props) {
