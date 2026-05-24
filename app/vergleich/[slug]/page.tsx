@@ -135,7 +135,11 @@ export default async function ArticlePage({ params }: Props) {
           </div>
 
           <article className="prose prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h2:text-2xl prose-h2:mt-10 prose-h3:text-xl prose-p:text-slate-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-strong:text-slate-900">
-            <MDXRemote source={article.content} components={mdxComponents} />
+            <MDXRemote
+              source={article.content}
+              components={mdxComponents}
+              options={{ blockJS: false }}
+            />
           </article>
 
           {/* Footer CTA */}
