@@ -68,6 +68,23 @@ function Section({
   );
 }
 
+const ARTICLE_DETAILS_CSS = `
+.article-details h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+}
+.article-details h2:first-child {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+`;
+
 export default function ArticleAccordion({
   summary,
   details,
@@ -77,6 +94,7 @@ export default function ArticleAccordion({
 }) {
   return (
     <div className="not-prose space-y-4 my-6">
+      <style dangerouslySetInnerHTML={{ __html: ARTICLE_DETAILS_CSS }} />
       <Section
         title="Schnellübersicht"
         defaultOpen
@@ -87,7 +105,7 @@ export default function ArticleAccordion({
       <Section
         title="Ausführlicher Vergleich"
         defaultOpen={false}
-        contentClassName="prose prose-slate max-w-none prose-p:mb-5 prose-p:leading-relaxed prose-p:text-base prose-p:text-slate-700 prose-strong:text-slate-900 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:pt-8 [&_h2]:border-t [&_h2]:border-slate-200 [&_h2:first-child]:border-t-0 [&_h2:first-child]:pt-0 [&_h2:first-child]:mt-0"
+        contentClassName="article-details prose prose-slate max-w-none prose-p:mb-5 prose-p:leading-relaxed prose-p:text-base prose-p:text-slate-700 prose-strong:text-slate-900"
       >
         {details}
       </Section>
