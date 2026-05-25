@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, createContext, useContext } from "react";
+import { useState, useMemo, useEffect, createContext, useContext } from "react";
 import Link from "next/link";
 import { scoreProduct, PRICE_CAPS } from "@/lib/products";
 import { translations, type Lang } from "@/lib/i18n";
@@ -191,65 +191,6 @@ function ResultCard({
   );
 }
 
-// ─── Priority Animation ────────────────────────────────────────────────────────
-
-const PRIORITY_ANIMATION_CSS = `
-@keyframes cs-eq-pump {
-  0%, 100% { transform: scaleY(0.25); }
-  50%      { transform: scaleY(1); }
-}
-@keyframes cs-score-pulse {
-  0%   { opacity: 0; transform: scale(0.6); }
-  40%  { opacity: 1; transform: scale(1.1); }
-  100% { opacity: 0; transform: scale(1.4); }
-}
-.cs-eq-bar {
-  transform-origin: center bottom;
-  animation: cs-eq-pump 0.55s ease-in-out infinite;
-}
-.cs-score-pulse {
-  animation: cs-score-pulse 1.2s ease-out forwards;
-}
-`;
-
-function PriorityAnimation({ type }: { type: ScoreKey }) {
-  if (type === "anc") {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-        <div className="relative w-40 h-40">
-          {[0, 0.25, 0.5].map((delay, i) => (
-            <span
-              key={i}
-              className="absolute inset-0 rounded-full border-2 border-blue-500 animate-ping opacity-70"
-              style={{ animationDelay: `${delay}s`, animationDuration: "1.4s" }}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
-  if (type === "sound") {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-        <div className="flex items-end gap-2 h-20">
-          {[0, 0.1, 0.2, 0.15, 0.05].map((delay, i) => (
-            <span
-              key={i}
-              className="cs-eq-bar block w-3 h-full bg-blue-500 rounded-full"
-              style={{ animationDelay: `${delay}s` }}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-      <div className="cs-score-pulse w-24 h-24 rounded-full bg-blue-500/25" />
-    </div>
-  );
-}
-
 // ─── Finder Tab ────────────────────────────────────────────────────────────────
 
 const STEPS = 4;
@@ -279,14 +220,6 @@ function FinderTab() {
   });
   const [done, setDone] = useState(false);
   const [contradictionsSeen, setContradictionsSeen] = useState(0);
-  const [anim, setAnim] = useState<{ type: ScoreKey; id: number } | null>(null);
-  const animTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (animTimerRef.current) clearTimeout(animTimerRef.current);
-    };
-  }, []);
 
   const budgetIndex = useMemo(
     () => (state.budget === "budget" ? 0 : state.budget === "mid" ? 1 : null),
@@ -337,9 +270,6 @@ function FinderTab() {
   }
 
   function togglePriority(p: ScoreKey) {
-    const wasIncluded = state.priorities.includes(p);
-    const willAdd = !wasIncluded && state.priorities.length < 3;
-
     setState((s) => ({
       ...s,
       priorities: s.priorities.includes(p)
@@ -348,12 +278,6 @@ function FinderTab() {
           ? [...s.priorities, p]
           : s.priorities,
     }));
-
-    if (willAdd) {
-      if (animTimerRef.current) clearTimeout(animTimerRef.current);
-      setAnim({ type: p, id: Date.now() });
-      animTimerRef.current = setTimeout(() => setAnim(null), 2000);
-    }
   }
 
   function reset() {
@@ -464,8 +388,7 @@ function FinderTab() {
   }
 
   return (
-    <div className="relative">
-      {anim && <PriorityAnimation key={anim.id} type={anim.type} />}
+    <div>
       {/* Progress bar */}
       <div className="flex items-center gap-2 mb-8">
         {Array.from({ length: STEPS }).map((_, i) => (
@@ -1159,7 +1082,6 @@ export default function CategoryPageClient({
   return (
     <LangCtx.Provider value={lang}>
       <ProductsCtx.Provider value={initialProducts}>
-        <style dangerouslySetInnerHTML={{ __html: PRIORITY_ANIMATION_CSS }} />
         <AppContent lang={lang} setLang={setLang} category={category} />
         <AffiliateDisclosure lang={lang} />
       </ProductsCtx.Provider>
