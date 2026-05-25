@@ -17,6 +17,8 @@ import {
   Apple,
   Headphones,
   Speaker,
+  Globe,
+  Smartphone,
   type LucideIcon,
 } from "lucide-react";
 import { scoreProduct, PRICE_CAPS } from "@/lib/products";
@@ -104,6 +106,36 @@ function BrandLogo({ brand }: { brand: string }) {
       onError={() => setFailed(true)}
     />
   );
+}
+
+const useCaseTagIconMap: Record<UseCase, LucideIcon> = {
+  sport: Dumbbell,
+  office: Monitor,
+  travel: Plane,
+  casual: Music,
+  calls: Phone,
+};
+
+function UseCaseTagIcon({ uc }: { uc: UseCase }) {
+  const Icon = useCaseTagIconMap[uc];
+  return <Icon size={12} className="inline mr-1" />;
+}
+
+function EcosystemTagIcon({ ecosystem }: { ecosystem: Ecosystem }) {
+  if (ecosystem === "apple") {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src="https://cdn.simpleicons.org/apple/171717"
+        alt=""
+        width={12}
+        height={12}
+        className="inline mr-1"
+      />
+    );
+  }
+  const Icon = ecosystem === "android" ? Smartphone : Globe;
+  return <Icon size={12} className="inline mr-1" />;
 }
 
 const scoreGradients = [
@@ -727,11 +759,11 @@ function GoldenCircleColumn({ product }: { product: Product }) {
               key={uc}
               className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full"
             >
-              {useCaseIcon[uc]} {t.useCaseLabel[uc]}
+              <UseCaseTagIcon uc={uc} />{t.useCaseLabel[uc]}
             </span>
           ))}
           <span className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full">
-            {ecosystemIcon[product.ecosystem]} {t.ecosystemLabel[product.ecosystem]}
+            <EcosystemTagIcon ecosystem={product.ecosystem} />{t.ecosystemLabel[product.ecosystem]}
           </span>
         </div>
       </div>
@@ -955,11 +987,11 @@ function ProdukteTab({
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {p.useCases.map((uc) => (
                   <span key={uc} className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full">
-                    {useCaseIcon[uc]} {t.useCaseLabel[uc]}
+                    <UseCaseTagIcon uc={uc} />{t.useCaseLabel[uc]}
                   </span>
                 ))}
                 <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 bg-blue-50 text-blue-600 rounded-full">
-                  {ecosystemIcon[p.ecosystem]} {t.ecosystemLabel[p.ecosystem]}
+                  <EcosystemTagIcon ecosystem={p.ecosystem} />{t.ecosystemLabel[p.ecosystem]}
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-x-5 gap-y-3">
@@ -989,11 +1021,11 @@ function ProdukteTab({
               <div className="flex flex-wrap gap-1 mb-3">
                 {p.useCases.map((uc) => (
                   <span key={uc} className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full">
-                    {useCaseIcon[uc]} {t.useCaseLabel[uc]}
+                    <UseCaseTagIcon uc={uc} />{t.useCaseLabel[uc]}
                   </span>
                 ))}
                 <span className="inline-flex items-center gap-0.5 text-xs font-medium px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full">
-                  {ecosystemIcon[p.ecosystem]} {t.ecosystemLabel[p.ecosystem]}
+                  <EcosystemTagIcon ecosystem={p.ecosystem} />{t.ecosystemLabel[p.ecosystem]}
                 </span>
               </div>
               <div className="space-y-2.5 mb-3">
