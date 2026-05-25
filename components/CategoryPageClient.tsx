@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, createContext, useContext } from "react";
+import { useState, useMemo, useEffect, useRef, createContext, useContext } from "react";
 import Link from "next/link";
 import { scoreProduct, PRICE_CAPS } from "@/lib/products";
 import { translations, type Lang } from "@/lib/i18n";
@@ -191,6 +191,65 @@ function ResultCard({
   );
 }
 
+// ─── Priority Animation ────────────────────────────────────────────────────────
+
+const PRIORITY_ANIMATION_CSS = `
+@keyframes cs-eq-pump {
+  0%, 100% { transform: scaleY(0.25); }
+  50%      { transform: scaleY(1); }
+}
+@keyframes cs-score-pulse {
+  0%   { opacity: 0; transform: scale(0.6); }
+  40%  { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+.cs-eq-bar {
+  transform-origin: center bottom;
+  animation: cs-eq-pump 0.55s ease-in-out infinite;
+}
+.cs-score-pulse {
+  animation: cs-score-pulse 1.2s ease-out forwards;
+}
+`;
+
+function PriorityAnimation({ type }: { type: ScoreKey }) {
+  if (type === "anc") {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+        <div className="relative w-40 h-40">
+          {[0, 0.25, 0.5].map((delay, i) => (
+            <span
+              key={i}
+              className="absolute inset-0 rounded-full border-2 border-blue-500 animate-ping opacity-70"
+              style={{ animationDelay: `${delay}s`, animationDuration: "1.4s" }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+  if (type === "sound") {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+        <div className="flex items-end gap-2 h-20">
+          {[0, 0.1, 0.2, 0.15, 0.05].map((delay, i) => (
+            <span
+              key={i}
+              className="cs-eq-bar block w-3 h-full bg-blue-500 rounded-full"
+              style={{ animationDelay: `${delay}s` }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+      <div className="cs-score-pulse w-24 h-24 rounded-full bg-blue-500/25" />
+    </div>
+  );
+}
+
 // ─── Finder Tab ────────────────────────────────────────────────────────────────
 
 const STEPS = 4;
@@ -220,6 +279,14 @@ function FinderTab() {
   });
   const [done, setDone] = useState(false);
   const [contradictionsSeen, setContradictionsSeen] = useState(0);
+  const [anim, setAnim] = useState<{ type: ScoreKey; id: number } | null>(null);
+  const animTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (animTimerRef.current) clearTimeout(animTimerRef.current);
+    };
+  }, []);
 
   const budgetIndex = useMemo(
     () => (state.budget === "budget" ? 0 : state.budget === "mid" ? 1 : null),
@@ -270,6 +337,9 @@ function FinderTab() {
   }
 
   function togglePriority(p: ScoreKey) {
+    const wasIncluded = state.priorities.includes(p);
+    const willAdd = !wasIncluded && state.priorities.length < 3;
+
     setState((s) => ({
       ...s,
       priorities: s.priorities.includes(p)
@@ -278,6 +348,12 @@ function FinderTab() {
           ? [...s.priorities, p]
           : s.priorities,
     }));
+
+    if (willAdd) {
+      if (animTimerRef.current) clearTimeout(animTimerRef.current);
+      setAnim({ type: p, id: Date.now() });
+      animTimerRef.current = setTimeout(() => setAnim(null), 2000);
+    }
   }
 
   function reset() {
@@ -388,7 +464,8 @@ function FinderTab() {
   }
 
   return (
-    <div>
+    <div className="relative">
+      {anim && <PriorityAnimation key={anim.id} type={anim.type} />}
       {/* Progress bar */}
       <div className="flex items-center gap-2 mb-8">
         {Array.from({ length: STEPS }).map((_, i) => (
@@ -694,6 +771,24 @@ function VergleichTab() {
 
 const PAGE_SIZE = 9;
 
+type SortKey = "price-asc" | "price-desc" | "anc-desc" | "sound-desc" | "battery-desc";
+type BudgetFilter = "all" | "u100" | "100-200" | "o200";
+
+const SORT_LABELS: Record<SortKey, string> = {
+  "price-asc": "Preis ↑",
+  "price-desc": "Preis ↓",
+  "anc-desc": "Beste ANC",
+  "sound-desc": "Bester Sound",
+  "battery-desc": "Beste Akku",
+};
+
+const BUDGET_FILTERS: { key: BudgetFilter; label: string }[] = [
+  { key: "all", label: "Alle" },
+  { key: "u100", label: "Unter 100€" },
+  { key: "100-200", label: "100–200€" },
+  { key: "o200", label: "Über 200€" },
+];
+
 function ProdukteTab({
   view,
   setView,
@@ -705,23 +800,41 @@ function ProdukteTab({
   const allProducts = useContext(ProductsCtx);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
+  const [sort, setSort] = useState<SortKey>("price-asc");
+  const [budgetFilter, setBudgetFilter] = useState<BudgetFilter>("all");
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    return allProducts.filter(
-      (p) =>
+    return allProducts.filter((p) => {
+      const matchesSearch =
         p.name.toLowerCase().includes(q) ||
         p.brand.toLowerCase().includes(q) ||
-        p.useCases.some((uc) => t.useCaseLabel[uc].toLowerCase().includes(q))
-    );
-  }, [search, allProducts, t]);
+        p.useCases.some((uc) => t.useCaseLabel[uc].toLowerCase().includes(q));
+      if (!matchesSearch) return false;
+      if (budgetFilter === "u100" && p.price >= 100) return false;
+      if (budgetFilter === "100-200" && (p.price < 100 || p.price > 200)) return false;
+      if (budgetFilter === "o200" && p.price <= 200) return false;
+      return true;
+    });
+  }, [search, allProducts, t, budgetFilter]);
 
-  useEffect(() => { setPage(0); }, [search, view]);
+  const sorted = useMemo(() => {
+    const arr = [...filtered];
+    switch (sort) {
+      case "price-asc":    return arr.sort((a, b) => a.price - b.price);
+      case "price-desc":   return arr.sort((a, b) => b.price - a.price);
+      case "anc-desc":     return arr.sort((a, b) => b.anc - a.anc);
+      case "sound-desc":   return arr.sort((a, b) => b.sound - a.sound);
+      case "battery-desc": return arr.sort((a, b) => b.battery - a.battery);
+    }
+  }, [filtered, sort]);
 
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  useEffect(() => { setPage(0); }, [search, view, sort, budgetFilter]);
+
+  const totalPages = Math.ceil(sorted.length / PAGE_SIZE);
   const paginated = useMemo(
-    () => filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE),
-    [filtered, page]
+    () => sorted.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE),
+    [sorted, page]
   );
 
   const toggleBtn = (active: boolean) =>
@@ -729,9 +842,9 @@ function ProdukteTab({
 
   return (
     <div>
-      {/* Search + View toggle */}
-      <div className="flex items-center gap-2 mb-6">
-        <div className="relative flex-1">
+      {/* Search + Sort + View toggle */}
+      <div className="flex items-center gap-2 mb-3 flex-wrap sm:flex-nowrap">
+        <div className="relative flex-1 min-w-0">
           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
             🔍
           </span>
@@ -743,6 +856,17 @@ function ProdukteTab({
             className="w-full border-2 border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all"
           />
         </div>
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as SortKey)}
+          className="shrink-0 border-2 border-slate-200 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 bg-white focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all cursor-pointer"
+        >
+          {(Object.keys(SORT_LABELS) as SortKey[]).map((k) => (
+            <option key={k} value={k}>
+              {SORT_LABELS[k]}
+            </option>
+          ))}
+        </select>
         <div className="flex items-center gap-1 shrink-0 border-2 border-slate-200 rounded-xl p-1">
           {/* List */}
           <button onClick={() => setView("list")} title="Liste" className={toggleBtn(view === "list")}>
@@ -766,8 +890,28 @@ function ProdukteTab({
         </div>
       </div>
 
+      {/* Budget filter chips */}
+      <div className="flex items-center gap-2 mb-6 flex-wrap">
+        {BUDGET_FILTERS.map(({ key, label }) => {
+          const active = budgetFilter === key;
+          return (
+            <button
+              key={key}
+              onClick={() => setBudgetFilter(key)}
+              className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${
+                active
+                  ? "bg-blue-600 text-white border-blue-600 shadow-sm shadow-blue-200"
+                  : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+              }`}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Empty state */}
-      {filtered.length === 0 && (
+      {sorted.length === 0 && (
         <div className="text-center py-12">
           <div className="text-3xl mb-2">🔇</div>
           <p className="text-sm text-slate-400">{t.noProducts}</p>
@@ -1015,6 +1159,7 @@ export default function CategoryPageClient({
   return (
     <LangCtx.Provider value={lang}>
       <ProductsCtx.Provider value={initialProducts}>
+        <style dangerouslySetInnerHTML={{ __html: PRIORITY_ANIMATION_CSS }} />
         <AppContent lang={lang} setLang={setLang} category={category} />
         <AffiliateDisclosure lang={lang} />
       </ProductsCtx.Provider>
