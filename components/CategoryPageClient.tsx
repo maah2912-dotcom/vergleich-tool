@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, createContext, useContext } from "react";
 import Link from "next/link";
+import { Volume2, VolumeX, Battery, Zap, Mic, Feather } from "lucide-react";
 import { scoreProduct, PRICE_CAPS } from "@/lib/products";
 import { translations, type Lang } from "@/lib/i18n";
 import type { Product, Category, UseCase, Budget, Ecosystem, ScoreKey } from "@/lib/types";
@@ -27,6 +28,15 @@ function getCategoryName(category: Category, lang: Lang): string {
 // ─── Constants ─────────────────────────────────────────────────────────────────
 
 const scoreKeys: ScoreKey[] = ["sound", "anc", "battery", "sport", "mic", "comfort"];
+
+const priorityMeta: Record<ScoreKey, { Icon: typeof Volume2; label: string }> = {
+  sound: { Icon: Volume2, label: "Bass" },
+  anc: { Icon: VolumeX, label: "Noise Cancelling" },
+  battery: { Icon: Battery, label: "Akku" },
+  sport: { Icon: Zap, label: "Sport" },
+  mic: { Icon: Mic, label: "Mikrofon" },
+  comfort: { Icon: Feather, label: "Komfort" },
+};
 
 const scoreGradients = [
   "from-blue-500 to-blue-400",
@@ -504,6 +514,7 @@ function FinderTab() {
             const rank = state.priorities.indexOf(p);
             const active = rank >= 0;
             const locked = !active && state.priorities.length >= 3;
+            const { Icon, label } = priorityMeta[p];
             return (
               <button
                 key={p}
@@ -522,7 +533,10 @@ function FinderTab() {
                     {rank + 1}
                   </span>
                 )}
-                <div className="text-sm font-semibold mt-1">{t.scoreLabel[p]}</div>
+                <div className="text-sm font-semibold mt-1 flex items-center">
+                  <Icon size={18} className="inline mr-2" />
+                  {label}
+                </div>
               </button>
             );
           })}
