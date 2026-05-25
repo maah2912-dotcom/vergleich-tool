@@ -66,6 +66,46 @@ const useCaseLucide: Record<UseCase, LucideIcon> = {
 void Apple;
 void Speaker;
 
+const brandLogoSlug: Record<string, string> = {
+  Apple: "apple",
+  Sony: "sony",
+  Samsung: "samsung",
+  Bose: "bose",
+  Jabra: "jabra",
+  JBL: "jbl",
+  Beats: "beats",
+  Sennheiser: "sennheiser",
+  Nothing: "nothing",
+  OnePlus: "oneplus",
+  Huawei: "huawei",
+  Google: "google",
+  Anker: "anker",
+  "Bang & Olufsen": "bangolufsen",
+  "CMF by Nothing": "nothing",
+  // EarFun: no Simple Icon → Headphones-Fallback
+};
+
+function BrandLogo({ brand }: { brand: string }) {
+  const slug = brandLogoSlug[brand];
+  const [failed, setFailed] = useState(false);
+
+  if (!slug || failed) {
+    return <Headphones size={16} className="inline mr-2" />;
+  }
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`https://cdn.simpleicons.org/${slug}/171717`}
+      alt={brand}
+      width={20}
+      height={20}
+      className="inline mr-2"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 const scoreGradients = [
   "from-blue-500 to-blue-400",
   "from-indigo-500 to-indigo-400",
@@ -491,7 +531,7 @@ function FinderTab() {
                     </span>
                   )}
                   <span className="text-xs font-semibold leading-tight flex items-center">
-                    <Headphones size={16} className="inline mr-2" />
+                    <BrandLogo brand={brand} />
                     {brand}
                   </span>
                 </button>
