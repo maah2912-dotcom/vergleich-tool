@@ -2,7 +2,23 @@
 
 import { useState, useMemo, useEffect, createContext, useContext } from "react";
 import Link from "next/link";
-import { Volume2, VolumeX, Battery, Zap, Mic, Feather } from "lucide-react";
+import {
+  Volume2,
+  VolumeX,
+  Battery,
+  Zap,
+  Mic,
+  Feather,
+  Dumbbell,
+  Monitor,
+  Plane,
+  Music,
+  Phone,
+  Apple,
+  Headphones,
+  Speaker,
+  type LucideIcon,
+} from "lucide-react";
 import { scoreProduct, PRICE_CAPS } from "@/lib/products";
 import { translations, type Lang } from "@/lib/i18n";
 import type { Product, Category, UseCase, Budget, Ecosystem, ScoreKey } from "@/lib/types";
@@ -29,7 +45,7 @@ function getCategoryName(category: Category, lang: Lang): string {
 
 const scoreKeys: ScoreKey[] = ["sound", "anc", "battery", "sport", "mic", "comfort"];
 
-const priorityMeta: Record<ScoreKey, { Icon: typeof Volume2; label: string }> = {
+const priorityMeta: Record<ScoreKey, { Icon: LucideIcon; label: string }> = {
   sound: { Icon: Volume2, label: "Bass" },
   anc: { Icon: VolumeX, label: "Noise Cancelling" },
   battery: { Icon: Battery, label: "Akku" },
@@ -37,6 +53,18 @@ const priorityMeta: Record<ScoreKey, { Icon: typeof Volume2; label: string }> = 
   mic: { Icon: Mic, label: "Mikrofon" },
   comfort: { Icon: Feather, label: "Komfort" },
 };
+
+const useCaseLucide: Record<UseCase, LucideIcon> = {
+  sport: Dumbbell,
+  office: Monitor,
+  travel: Plane,
+  casual: Music,
+  calls: Phone,
+};
+
+// keep imports referenced so tree-shaking knows they're used downstream
+void Apple;
+void Speaker;
 
 const scoreGradients = [
   "from-blue-500 to-blue-400",
@@ -462,7 +490,10 @@ function FinderTab() {
                       ✓
                     </span>
                   )}
-                  <span className="text-xs font-semibold leading-tight">{brand}</span>
+                  <span className="text-xs font-semibold leading-tight flex items-center">
+                    <Headphones size={16} className="inline mr-2" />
+                    {brand}
+                  </span>
                 </button>
               );
             })}
@@ -486,6 +517,7 @@ function FinderTab() {
         <div className="grid grid-cols-2 gap-2.5">
           {(Object.keys(useCaseIcon) as UseCase[]).map((uc) => {
             const active = state.useCases.includes(uc);
+            const Icon = useCaseLucide[uc];
             return (
               <button
                 key={uc}
@@ -499,8 +531,10 @@ function FinderTab() {
                 {active && (
                   <span className="absolute top-2 right-2 text-blue-500 text-xs font-bold">✓</span>
                 )}
-                <div className="text-xl mb-1.5">{useCaseIcon[uc]}</div>
-                <div className="text-xs font-semibold leading-tight">{t.useCaseLabel[uc]}</div>
+                <div className="text-xs font-semibold leading-tight flex items-center">
+                  <Icon size={20} className="inline mr-2" />
+                  {t.useCaseLabel[uc]}
+                </div>
               </button>
             );
           })}
