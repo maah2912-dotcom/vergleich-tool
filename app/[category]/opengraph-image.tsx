@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { Headphones } from "lucide-react";
+import { Ear } from "lucide-react";
 import { getCategoryBySlug } from "@/lib/categories";
 import { getProductsByCategory } from "@/lib/products";
 
@@ -68,7 +68,7 @@ export default async function Image({
         >
           {category?.icon === "headphones" ? (
             <div style={{ display: "flex", color: "#f8fafc" }}>
-              <Headphones size={72} />
+              <Ear size={72} />
             </div>
           ) : category?.icon ? (
             <span style={{ fontSize: "72px", lineHeight: 1, display: "flex" }}>
