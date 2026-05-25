@@ -2,13 +2,13 @@
 
 import { useState, useEffect, createContext, useContext } from "react";
 import Link from "next/link";
-import { Ear } from "lucide-react";
+import EarbudsIcon from "./EarbudsIcon";
 import { getCategories } from "@/lib/categories";
 import { translations, type Lang } from "@/lib/i18n";
 import type { Category } from "@/lib/types";
 
 function CategoryIcon({ icon }: { icon: string }) {
-  if (icon === "headphones") return <Ear size={40} />;
+  if (icon === "headphones") return <EarbudsIcon size={40} />;
   return <span>{icon}</span>;
 }
 
