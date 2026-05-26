@@ -1,6 +1,8 @@
 "use client";
 
 import { useInView } from "@/lib/useInView";
+import AudioExplainer from "./AudioExplainer";
+import type { ScoreKey } from "@/lib/types";
 
 export type CompareRow = {
   id: string;
@@ -17,7 +19,7 @@ export type CompareRow = {
   note: string;
 };
 
-const SCORE_ROWS: { key: keyof CompareRow; label: string; gradient: string }[] = [
+const SCORE_ROWS: { key: ScoreKey; label: string; gradient: string }[] = [
   { key: "sound", label: "Klang", gradient: "from-blue-500 to-blue-400" },
   { key: "anc", label: "ANC", gradient: "from-indigo-500 to-indigo-400" },
   { key: "battery", label: "Akku", gradient: "from-orange-500 to-orange-400" },
@@ -148,7 +150,10 @@ export default function ProductCompareTableView({
                 scope="row"
                 className="text-left px-2 sm:px-4 py-2.5 sm:py-3 text-xs font-semibold text-slate-500"
               >
-                {row.label}
+                <span className="inline-flex items-center">
+                  {row.label}
+                  <AudioExplainer scoreKey={row.key} />
+                </span>
               </th>
               {products.map((p) => (
                 <td key={p.id} className="px-2 sm:px-4 py-2.5 sm:py-3">

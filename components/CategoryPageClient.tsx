@@ -25,6 +25,7 @@ import { scoreProduct, PRICE_CAPS } from "@/lib/products";
 import { translations, type Lang } from "@/lib/i18n";
 import type { Product, Category, UseCase, Budget, Ecosystem, ScoreKey } from "@/lib/types";
 import AffiliateDisclosure from "./AffiliateDisclosure";
+import AudioExplainer from "./AudioExplainer";
 
 // ─── Contexts ──────────────────────────────────────────────────────────────────
 
@@ -179,15 +180,20 @@ function ScoreBar({
   label,
   value,
   gradient = "from-blue-500 to-blue-400",
+  scoreKey,
 }: {
   label: string;
   value: number;
   gradient?: string;
+  scoreKey?: ScoreKey;
 }) {
   return (
     <div className="space-y-1.5">
       <div className="flex justify-between items-center">
-        <span className="text-xs text-slate-500 font-medium">{label}</span>
+        <span className="text-xs text-slate-500 font-medium inline-flex items-center">
+          {label}
+          {scoreKey && <AudioExplainer scoreKey={scoreKey} />}
+        </span>
         <span className="text-xs font-semibold text-slate-700 tabular-nums">
           {value}
           <span className="text-slate-400 font-normal">/10</span>
@@ -264,7 +270,7 @@ function ResultCard({
       )}
       <div className="grid grid-cols-3 gap-x-5 gap-y-2.5">
         {(["sound", "anc", "battery"] as ScoreKey[]).map((k, i) => (
-          <ScoreBar key={k} label={t.scoreLabel[k]} value={product[k]} gradient={scoreGradients[i]} />
+          <ScoreBar key={k} scoreKey={k} label={t.scoreLabel[k]} value={product[k]} gradient={scoreGradients[i]} />
         ))}
       </div>
     </div>
@@ -709,7 +715,7 @@ function GoldenCircleColumn({ product }: { product: Product }) {
       <SectionLabel label={t.goldenHow} />
       <div className="px-1 space-y-3">
         {howKeys.map((k, i) => (
-          <ScoreBar key={k} label={t.scoreLabel[k]} value={product[k]} gradient={howGradients[i]} />
+          <ScoreBar key={k} scoreKey={k} label={t.scoreLabel[k]} value={product[k]} gradient={howGradients[i]} />
         ))}
       </div>
 
@@ -1002,7 +1008,7 @@ function ProdukteTab({
               </div>
               <div className="grid grid-cols-3 gap-x-5 gap-y-3">
                 {scoreKeys.map((k, idx) => (
-                  <ScoreBar key={k} label={t.scoreLabel[k]} value={p[k]} gradient={scoreGradients[idx]} />
+                  <ScoreBar key={k} scoreKey={k} label={t.scoreLabel[k]} value={p[k]} gradient={scoreGradients[idx]} />
                 ))}
               </div>
               <p className="text-xs text-slate-500 mt-4 pt-4 border-t border-slate-100 leading-relaxed">
@@ -1054,7 +1060,7 @@ function ProdukteTab({
               </div>
               <div className="space-y-2.5 mb-3">
                 {scoreKeys.map((k, idx) => (
-                  <ScoreBar key={k} label={t.scoreLabel[k]} value={p[k]} gradient={scoreGradients[idx]} />
+                  <ScoreBar key={k} scoreKey={k} label={t.scoreLabel[k]} value={p[k]} gradient={scoreGradients[idx]} />
                 ))}
               </div>
               <p className="text-xs text-slate-500 pt-3 border-t border-slate-100 leading-relaxed mb-3">
