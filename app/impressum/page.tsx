@@ -35,10 +35,10 @@ export default function ImpressumPage() {
               Telefon: +49 (0) 176 30 34 34 14<br />
               E-Mail:{" "}
               <a
-                href="mailto:amarex06@outlook.com"
+                href="mailto:kontakt@byamarex.com"
                 className="text-blue-600 hover:underline"
               >
-                amarex06@outlook.com
+                kontakt@byamarex.com
               </a>
             </p>
           </section>
@@ -72,6 +72,7 @@ export default function ImpressumPage() {
               Affiliate-Links (Amazon Partnerprogramm)
             </h2>
             <p>
+              Als Amazon-Partner verdiene ich an qualifizierten Verkäufen.
               Diese Website nimmt am Amazon Partnerprogramm teil, einem
               Affiliate-Programm, das es Websites ermöglicht, Werbeeinnahmen
               durch Verlinkung mit Amazon.de zu erzielen. Wenn du über einen

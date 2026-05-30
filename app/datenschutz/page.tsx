@@ -38,10 +38,10 @@ export default function DatenschutzPage() {
               57074 Siegen<br />
               E-Mail:{" "}
               <a
-                href="mailto:amarex06@outlook.com"
+                href="mailto:kontakt@byamarex.com"
                 className="text-blue-600 hover:underline"
               >
-                amarex06@outlook.com
+                kontakt@byamarex.com
               </a>
             </p>
           </section>
@@ -62,14 +62,22 @@ export default function DatenschutzPage() {
           <section>
             <h2 className="font-semibold text-slate-900 mb-2">4. Cookies & Tracking</h2>
             <p>
-              Diese Website verwendet <span className="font-medium">keine Cookies</span> und
-              kein Tracking. Es werden keine Analyse- oder Werbe-Tools eingesetzt.
+              Diese Website selbst setzt keine eigenen Tracking-Cookies. Wir
+              nutzen Vercel Web Analytics (Vercel Inc.), ein
+              datenschutzfreundliches, cookieloses Analyse-Tool, das
+              anonymisierte Nutzungsdaten erfasst (Seitenaufrufe, Referrer,
+              ungefähre Region, Gerätetyp). Es werden keine personenbezogenen
+              Profile erstellt. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO
+              (berechtigtes Interesse an der Reichweitenmessung). Beim Klick auf
+              Amazon-Affiliate-Links kann Amazon eigene Cookies setzen (siehe
+              §5).
             </p>
           </section>
 
           <section>
             <h2 className="font-semibold text-slate-900 mb-2">5. Affiliate-Links</h2>
             <p>
+              Als Amazon-Partner verdiene ich an qualifizierten Verkäufen.
               Diese Website nimmt am Amazon Partnerprogramm teil. Beim Kauf über
               unsere Links erhalten wir eine Provision — für dich entstehen keine
               Mehrkosten. Amazon verarbeitet beim Klick auf Affiliate-Links eigene
@@ -87,7 +95,16 @@ export default function DatenschutzPage() {
           </section>
 
           <section>
-            <h2 className="font-semibold text-slate-900 mb-2">6. Deine Rechte</h2>
+            <h2 className="font-semibold text-slate-900 mb-2">6. Datenbank</h2>
+            <p>
+              Produktdaten werden über Supabase (Supabase Inc.) bereitgestellt.
+              Beim Abruf von Produktinformationen werden keine personenbezogenen
+              Daten der Besucher gespeichert.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-semibold text-slate-900 mb-2">7. Deine Rechte</h2>
             <p>
               Du hast das Recht auf Auskunft, Berichtigung, Löschung,
               Einschränkung der Verarbeitung sowie Widerspruch gegen die
@@ -96,10 +113,10 @@ export default function DatenschutzPage() {
             <p className="mt-2">
               Anfragen richtest du an:{" "}
               <a
-                href="mailto:amarex06@outlook.com"
+                href="mailto:kontakt@byamarex.com"
                 className="text-blue-600 hover:underline"
               >
-                amarex06@outlook.com
+                kontakt@byamarex.com
               </a>
             </p>
           </section>
