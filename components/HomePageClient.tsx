@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, createContext, useContext } from "react";
 import Link from "next/link";
 import EarbudsIcon from "./EarbudsIcon";
 import { getCategories } from "@/lib/categories";
-import { translations, type Lang } from "@/lib/i18n";
+import { translations, langMeta, type Lang } from "@/lib/i18n";
 import type { Category } from "@/lib/types";
 
 function CategoryIcon({ icon }: { icon: string }) {
@@ -43,12 +43,6 @@ function CategoryCard({ category, lang }: { category: Category; lang: Lang }) {
     </Link>
   );
 }
-
-const langMeta: Record<Lang, { flag: string; short: string }> = {
-  de: { flag: "🇩🇪", short: "DE" },
-  en: { flag: "🇬🇧", short: "EN" },
-  fr: { flag: "🇫🇷", short: "FR" },
-};
 
 function HomePage({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void }) {
   const t = useLang();

@@ -296,3 +296,9 @@ const fr: Translation = {
 };
 
 export const translations: Record<Lang, Translation> = { de, en, fr };
+
+export const langMeta: Record<Lang, { flag: string; short: string }> = {
+  de: { flag: "🇩🇪", short: "DE" },
+  en: { flag: "🇬🇧", short: "EN" },
+  fr: { flag: "🇫🇷", short: "FR" },
+};

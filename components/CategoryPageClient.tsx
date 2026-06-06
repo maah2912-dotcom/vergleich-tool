@@ -22,7 +22,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { scoreProduct, PRICE_CAPS } from "@/lib/products";
-import { translations, type Lang } from "@/lib/i18n";
+import { translations, langMeta, type Lang } from "@/lib/i18n";
 import type { Product, Category, UseCase, Budget, Ecosystem, ScoreKey } from "@/lib/types";
 import AffiliateDisclosure from "./AffiliateDisclosure";
 import AudioExplainer from "./AudioExplainer";
@@ -1101,12 +1101,6 @@ function ProdukteTab({
 // ─── App Content ───────────────────────────────────────────────────────────────
 
 type Tab = "finder" | "vergleich" | "produkte";
-
-const langMeta: Record<Lang, { flag: string; short: string }> = {
-  de: { flag: "🇩🇪", short: "DE" },
-  en: { flag: "🇬🇧", short: "EN" },
-  fr: { flag: "🇫🇷", short: "FR" },
-};
 
 function AppContent({
   lang,
