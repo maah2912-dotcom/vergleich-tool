@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
 import Link from "next/link";
 import EarbudsIcon from "./EarbudsIcon";
 import { getCategories } from "@/lib/categories";
@@ -44,10 +44,28 @@ function CategoryCard({ category, lang }: { category: Category; lang: Lang }) {
   );
 }
 
+const langMeta: Record<Lang, { flag: string; short: string }> = {
+  de: { flag: "🇩🇪", short: "DE" },
+  en: { flag: "🇬🇧", short: "EN" },
+  fr: { flag: "🇫🇷", short: "FR" },
+};
+
 function HomePage({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void }) {
   const t = useLang();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
 
   useEffect(() => {
     getCategories().then((cats) => {
@@ -66,20 +84,35 @@ function HomePage({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void })
               <h1 className="text-3xl font-bold text-white tracking-tight">{t.homeHeroTitle}</h1>
               <p className="text-blue-400 font-semibold mt-1">{t.homeHeroSub}</p>
             </div>
-            <div className="flex items-center gap-0.5 shrink-0 mt-1">
-              {(["de", "en", "fr"] as Lang[]).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  className={`text-xs font-bold px-2.5 py-1.5 rounded-lg transition-all uppercase tracking-wide ${
-                    lang === l
-                      ? "bg-white/15 text-white"
-                      : "text-slate-500 hover:text-slate-300 hover:bg-white/5"
-                  }`}
-                >
-                  {l}
-                </button>
-              ))}
+            <div className="relative shrink-0 mt-1" ref={dropdownRef}>
+              <button
+                onClick={() => setDropdownOpen((v) => !v)}
+                className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg bg-white/15 text-white hover:bg-white/20 transition-all"
+              >
+                <span>{langMeta[lang].flag}</span>
+                <span>{langMeta[lang].short}</span>
+                <span className="text-xs opacity-60">▾</span>
+              </button>
+
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-1 w-36 bg-[#1e2a3a] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+                  {(["de", "en", "fr"] as Lang[]).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => { setLang(l); setDropdownOpen(false); }}
+                      className={`flex items-center gap-2 w-full px-3 py-2 text-sm transition-all ${
+                        lang === l
+                          ? "bg-white/15 text-white font-semibold"
+                          : "text-slate-300 hover:bg-white/10"
+                      }`}
+                    >
+                      <span>{langMeta[l].flag}</span>
+                      <span>{langMeta[l].short}</span>
+                      {lang === l && <span className="ml-auto text-blue-400">✓</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
